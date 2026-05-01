@@ -33,8 +33,6 @@ jobs:
   deploy:
     name: SSH JAR Deploy
     runs-on: ubuntu-latest
-    environment:
-      name: qa
 
     steps:
       - name: Download built JAR
