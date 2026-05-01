@@ -18,7 +18,7 @@ Use names similar to:
 QA_SSH_HOST
 QA_SSH_USER
 QA_SSH_PRIVATE_KEY
-QA_BACKEND_API_URL
+QA_IDS_PLATFORM_BACKEND_URL
 NEXUS_URL
 NEXUS_USERNAME
 NEXUS_PASSWORD
@@ -29,8 +29,8 @@ NEXUS_PASSWORD
 The deployment user should be allowed to restart only the required service:
 
 ```text
-sudo systemctl restart backend-api
-sudo systemctl status backend-api
+sudo systemctl restart ids-platform-backend
+sudo systemctl status ids-platform-backend
 ```
 
 Avoid giving the deployment user unrestricted sudo access.

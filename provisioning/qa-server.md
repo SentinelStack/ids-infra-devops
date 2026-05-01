@@ -17,6 +17,6 @@ Recommended base directory:
 Recommended service user:
 
 ```text
-ids-backend
+ids-platform-backend
 ```
 

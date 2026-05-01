@@ -7,7 +7,7 @@ Use these conventions for every deployable service added to the platform.
 Use kebab-case:
 
 ```text
-backend-api
+ids-platform-backend
 frontend
 edge-agent
 ai-worker

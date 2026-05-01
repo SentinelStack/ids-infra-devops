@@ -1,6 +1,6 @@
 # Health Checks
 
-The backend API should expose a stable health endpoint.
+The IDS platform backend should expose a stable health endpoint.
 
 Recommended path:
 
@@ -13,6 +13,6 @@ QA deployment should fail if the health check fails after restart.
 Example:
 
 ```bash
-services/backend-api/deploy/healthcheck-backend-api.sh https://api.qa.example.com
+services/ids-platform-backend/deploy/healthcheck-ids-platform-backend.sh https://qa-api.puk3p.online
 ```
 

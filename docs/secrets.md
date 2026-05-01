@@ -16,7 +16,7 @@ Use GitHub Actions secrets for CI/CD values:
 Use files on the target server for runtime service secrets:
 
 ```text
-/opt/ids-platform/backend-api/shared/backend-api.env
+/opt/ids-platform/ids-platform-backend/shared/ids-platform-backend.env
 ```
 
 ## What Can Be Committed
@@ -42,14 +42,14 @@ Unsafe to commit:
 Example files:
 
 ```text
-backend-api.env.example
+ids-platform-backend.env.example
 service.env.example
 ```
 
 Real files:
 
 ```text
-backend-api.env
+ids-platform-backend.env
 ```
 
 Real files must remain outside Git.

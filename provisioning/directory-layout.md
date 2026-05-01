@@ -4,7 +4,7 @@ Recommended server layout:
 
 ```text
 /opt/ids-platform/
-├── backend-api/
+├── ids-platform-backend/
 │   ├── releases/
 │   ├── current
 │   ├── shared/

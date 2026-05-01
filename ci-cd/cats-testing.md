@@ -16,3 +16,9 @@ Generated CATS reports may be published to GitHub Pages if they are useful for t
 
 Do not publish sensitive payloads or secrets in public reports.
 
+## Current Backend Targets
+
+```text
+contract: https://qa-api.puk3p.online/test/contract/bundled
+server: https://qa-api.puk3p.online
+```

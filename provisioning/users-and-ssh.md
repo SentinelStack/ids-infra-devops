@@ -16,7 +16,7 @@ Recommended properties:
 Use a separate service user for running the backend:
 
 ```text
-ids-backend
+ids-platform-backend
 ```
 
 The service user should not be the same as the SSH deployment user.

@@ -5,9 +5,15 @@ Nexus stores backend build artifacts produced by the backend repository.
 ## Suggested Maven Coordinates
 
 ```text
-groupId: ro.licenta.ids
-artifactId: ids-backend-api
-version: 1.0.0-SNAPSHOT or release version
+groupId: ro.puk3p.sentinel
+artifactId: ids-platform-backend
+version: 1.0.0
+```
+
+Nexus base URL currently used by the backend:
+
+```text
+https://nexus.puk3p.online
 ```
 
 ## Infra Repository Role
@@ -25,4 +31,3 @@ The backend repository should own:
 - `pom.xml`
 - Maven publishing configuration
 - build and test workflows
-

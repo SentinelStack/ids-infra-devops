@@ -9,6 +9,6 @@ Recommended approach:
 - artifact is downloaded from Nexus or copied to the QA server
 - deployment script creates a release directory
 - `current` symlink is updated
-- systemd restarts the backend API
+- systemd restarts the IDS platform backend
 - health check verifies the deployment
 

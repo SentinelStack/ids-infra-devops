@@ -13,7 +13,7 @@ Rollback uses the release directory layout on the server.
 Example:
 
 ```bash
-services/backend-api/deploy/rollback-backend-api.sh 20260501120000
-services/backend-api/deploy/healthcheck-backend-api.sh https://api.qa.example.com
+services/ids-platform-backend/deploy/rollback-ids-platform-backend.sh 20260501120000
+services/ids-platform-backend/deploy/healthcheck-ids-platform-backend.sh https://qa-api.puk3p.online
 ```
 

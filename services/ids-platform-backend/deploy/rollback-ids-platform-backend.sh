@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SERVICE_NAME="backend-api"
+SERVICE_NAME="ids-platform-backend"
 APP_DIR="/opt/ids-platform/${SERVICE_NAME}"
 RELEASES_DIR="${APP_DIR}/releases"
 CURRENT_LINK="${APP_DIR}/current"

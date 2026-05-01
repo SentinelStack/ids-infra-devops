@@ -6,7 +6,7 @@ required_paths=(
   "environments/local"
   "environments/qa"
   "environments/prod"
-  "services/backend-api"
+  "services/ids-platform-backend"
   "ci-cd"
   "ops"
   "provisioning"

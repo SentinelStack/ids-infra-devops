@@ -7,7 +7,7 @@ It is used to validate deployed backend artifacts, run health checks, and execut
 ## Expected Components
 
 - QA server accessible over SSH from GitHub Actions
-- backend API running under systemd
+- IDS platform backend running under systemd
 - reverse proxy exposing HTTPS
 - runtime env file stored on the server
 - Nexus used as the artifact source

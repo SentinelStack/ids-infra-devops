@@ -5,7 +5,7 @@
 Recommended pattern:
 
 ```text
-api.qa.example.com
+qa-api.puk3p.online
 frontend.qa.example.com
 reports.qa.example.com
 agent-updates.qa.example.com
@@ -16,7 +16,7 @@ agent-updates.qa.example.com
 Recommended pattern:
 
 ```text
-api.example.com
+api.puk3p.online
 app.example.com
 reports.example.com
 agent-updates.example.com

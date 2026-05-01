@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-SERVICE_NAME="backend-api"
+SERVICE_NAME="ids-platform-backend"
 APP_DIR="/opt/ids-platform/${SERVICE_NAME}"
 RELEASES_DIR="${APP_DIR}/releases"
 CURRENT_LINK="${APP_DIR}/current"
@@ -9,7 +9,7 @@ ARTIFACT_PATH="${1:-}"
 RELEASE_ID="${2:-$(date -u +%Y%m%d%H%M%S)}"
 
 if [[ -z "${ARTIFACT_PATH}" ]]; then
-  echo "Usage: $0 /path/to/backend-api.jar [release-id]" >&2
+  echo "Usage: $0 /path/to/ids-platform-backend.jar [release-id]" >&2
   exit 1
 fi
 
@@ -21,7 +21,7 @@ fi
 RELEASE_DIR="${RELEASES_DIR}/${RELEASE_ID}"
 
 mkdir -p "${RELEASE_DIR}"
-cp "${ARTIFACT_PATH}" "${RELEASE_DIR}/backend-api.jar"
+cp "${ARTIFACT_PATH}" "${RELEASE_DIR}/ids-platform-backend.jar"
 ln -sfn "${RELEASE_DIR}" "${CURRENT_LINK}"
 
 sudo systemctl restart "${SERVICE_NAME}"

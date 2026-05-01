@@ -1,21 +1,21 @@
-# Backend API Troubleshooting
+# IDS Platform Backend Troubleshooting
 
 ## Check Service Status
 
 ```bash
-sudo systemctl status backend-api
+sudo systemctl status ids-platform-backend
 ```
 
 ## Follow Logs
 
 ```bash
-sudo journalctl -u backend-api -f
+sudo journalctl -u ids-platform-backend -f
 ```
 
 ## Check Active Release
 
 ```bash
-readlink -f /opt/ids-platform/backend-api/current
+readlink -f /opt/ids-platform/ids-platform-backend/current
 ```
 
 ## Check Reverse Proxy
@@ -27,7 +27,7 @@ sudo systemctl status nginx
 
 ## Common Failure Areas
 
-- missing or incorrect `/opt/ids-platform/backend-api/shared/backend-api.env`
+- missing or incorrect `/opt/ids-platform/ids-platform-backend/shared/ids-platform-backend.env`
 - Java not installed on the QA server
 - artifact missing from the active release directory
 - service user does not have permission to read files

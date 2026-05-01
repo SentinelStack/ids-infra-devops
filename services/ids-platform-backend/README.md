@@ -1,8 +1,8 @@
-# Backend API Service
+# IDS Platform Backend Service
 
-The backend API is currently the main deployed platform component.
+The IDS platform backend is currently the main deployed platform component.
 
-This folder contains deployment assets for running the backend API on QA and later production.
+This folder contains deployment assets for running the IDS platform backend on QA and later production.
 
 ## Contents
 
@@ -19,11 +19,11 @@ runbooks/  # troubleshooting and operational notes
 Recommended QA server layout:
 
 ```text
-/opt/ids-platform/backend-api/
+/opt/ids-platform/ids-platform-backend/
 ├── releases/
 ├── current -> releases/<release-id>
 ├── shared/
-│   └── backend-api.env
+│   └── ids-platform-backend.env
 └── logs/
 ```
 
@@ -32,7 +32,7 @@ Recommended QA server layout:
 Recommended Linux user:
 
 ```text
-ids-backend
+ids-platform-backend
 ```
 
 The service should not run as root.

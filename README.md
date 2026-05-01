@@ -2,7 +2,7 @@
 
 Operational repository for the intelligent IDS/IPS bachelor thesis platform.
 
-This repository contains deployment conventions, environment documentation, server configuration templates, operational runbooks, and reusable infrastructure patterns for the platform. Application source code remains in the service repositories, such as the backend API repository.
+This repository contains deployment conventions, environment documentation, server configuration templates, operational runbooks, and reusable infrastructure patterns for the platform. Application source code remains in the service repositories, such as the IDS platform backend repository.
 
 ## Platform Context
 
@@ -10,7 +10,7 @@ The project is an intelligent IDS/IPS platform with an OpenWrt edge-agent and a 
 
 Current operational focus:
 
-- backend API deployment to QA
+- IDS platform backend deployment to QA
 - Maven artifact publishing to Nexus
 - GitHub Actions based CI/CD
 - SSH based QA deployment
@@ -57,7 +57,7 @@ Services use kebab-case and should keep the same name across folders, systemd un
 
 Examples:
 
-- `backend-api`
+- `ids-platform-backend`
 - `frontend`
 - `edge-agent`
 - `ai-worker`
@@ -89,7 +89,8 @@ See:
 
 - [Deployment Flow](docs/deployment-flow.md)
 - [Environment Model](docs/environments.md)
+- [Backend Integration](docs/backend-integration.md)
 - [QA Environment](environments/qa/README.md)
-- [Backend API Service](services/backend-api/README.md)
+- [IDS Platform Backend Service](services/ids-platform-backend/README.md)
 - [Nexus](docs/nexus.md)
 - [CATS Testing](ci-cd/cats-testing.md)
