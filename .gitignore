@@ -1,0 +1,32 @@
+# Local secrets and environment files
+.env
+*.env
+!.env.example
+!*env.example
+*.secret
+*.secrets
+
+# SSH / TLS private material
+*.pem
+*.key
+id_rsa
+id_ed25519
+known_hosts.local
+
+# Generated logs and temporary files
+*.log
+tmp/
+temp/
+.tmp/
+
+# OS/editor noise
+.DS_Store
+.idea/
+.vscode/
+
+# Tool caches
+.pytest_cache/
+.ruff_cache/
+node_modules/
+target/
+

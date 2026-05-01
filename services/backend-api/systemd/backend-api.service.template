@@ -1,0 +1,24 @@
+[Unit]
+Description=IDS Backend API
+After=network.target
+
+[Service]
+Type=simple
+User=ids-backend
+Group=ids-backend
+WorkingDirectory=/opt/ids-platform/backend-api/current
+EnvironmentFile=/opt/ids-platform/backend-api/shared/backend-api.env
+ExecStart=/usr/bin/java -jar /opt/ids-platform/backend-api/current/backend-api.jar
+Restart=on-failure
+RestartSec=10
+SuccessExitStatus=143
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/ids-platform/backend-api
+
+[Install]
+WantedBy=multi-user.target
+
