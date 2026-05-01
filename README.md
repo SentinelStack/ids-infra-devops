@@ -1,96 +1,73 @@
-# IDS Infra DevOps
+# Sentinel Shared DevOps Config
 
-Operational repository for the intelligent IDS/IPS bachelor thesis platform.
+Acest repository este locul central pentru setari reutilizabile folosite de repo-urile proiectului Sentinel IDS/IPS.
 
-This repository contains deployment conventions, environment documentation, server configuration templates, operational runbooks, and reusable infrastructure patterns for the platform. Application source code remains in the service repositories, such as the IDS platform backend repository.
+Nu este gandit ca un repo de documentatie operationala lunga. Rolul lui este sa ofere configuratii si workflows pe care celelalte repo-uri le pot importa.
 
-## Platform Context
-
-The project is an intelligent IDS/IPS platform with an OpenWrt edge-agent and a backend-first architecture.
-
-Current operational focus:
-
-- IDS platform backend deployment to QA
-- Maven artifact publishing to Nexus
-- GitHub Actions based CI/CD
-- SSH based QA deployment
-- CATS contract/API fuzz testing against QA
-- DNS and HTTPS setup for exposed services
-
-Future components may include:
-
-- frontend web application
-- OpenWrt edge-agent delivery/update flow
-- AI analysis workers
-- MISP threat intelligence integration
-- object storage for PCAPs, reports, exports, or datasets
-- historical analytics and reporting
-
-## Repository Layout
+## Ce Tine Aici
 
 ```text
-.
-├── docs/              # Architecture and operational explanations
-├── environments/      # Environment-specific notes and config examples
-├── services/          # Per-service deployment assets and runbooks
-├── ci-cd/             # GitHub Actions, Nexus, CATS, and release docs
-├── ops/               # Logs, health checks, rollback, and maintenance notes
-├── provisioning/      # Server bootstrap and host conventions
-├── security/          # Secrets, SSH, TLS, and hardening policies
-├── templates/         # Reusable service templates
-└── scripts/           # Small generic helper scripts
+.github/workflows/        # GitHub Actions reutilizabile
+.github/actions/          # Composite actions reutilizabile
+config/maven/             # Maven/Nexus settings templates
+config/quality/           # Checkstyle, PMD, SpotBugs config
+config/services/          # Templates pentru service-uri concrete
+examples/github-actions/  # Exemple scurte de import
 ```
 
-## Environments
-
-The repository uses three stable environment names:
-
-- `local` for developer machines and local experiments
-- `qa` for the hosted integration/test environment
-- `prod` for future production readiness
-
-QA is the primary active environment today. Production documentation exists so the system can evolve cleanly without adding production complexity too early.
-
-## Service Naming
-
-Services use kebab-case and should keep the same name across folders, systemd units, environment files, reverse proxy configs, and scripts.
-
-Examples:
-
-- `ids-platform-backend`
-- `frontend`
-- `edge-agent`
-- `ai-worker`
-- `threat-intel`
-- `reporting-worker`
-
-## Secrets Rule
-
-Never commit real secrets.
-
-Commit only:
-
-- `*.example`
-- `*.template`
-- documentation
-- scripts without embedded credentials
-
-Real environment files should live on the target host, in GitHub Actions secrets, or in another secret store later.
-
-## First Operational Target
-
-The first supported deployment target is:
+## Ce Nu Tine Aici
 
 ```text
-GitHub Actions -> Maven build -> Nexus artifact -> SSH deploy to QA -> systemd restart -> health check -> CATS against QA
+cod sursa aplicatie
+teste de business
+pom.xml principal al aplicatiei
+secrete reale
+artefacte build-uite
+documentatie lunga de flow
 ```
 
-See:
+## Logica
 
-- [Deployment Flow](docs/deployment-flow.md)
-- [Environment Model](docs/environments.md)
-- [Backend Integration](docs/backend-integration.md)
-- [QA Environment](environments/qa/README.md)
-- [IDS Platform Backend Service](services/ids-platform-backend/README.md)
-- [Nexus](docs/nexus.md)
-- [CATS Testing](ci-cd/cats-testing.md)
+Repo-urile aplicatiei importa setari de aici.
+
+Exemplu:
+
+```yaml
+jobs:
+  quality:
+    uses: SentinelStack/ids-infra-devops/.github/workflows/reusable-maven-quality.yml@main
+    with:
+      java_version: "21"
+```
+
+Pentru deploy generic de JAR peste SSH:
+
+```yaml
+jobs:
+  deploy-qa:
+    uses: SentinelStack/ids-infra-devops/.github/workflows/reusable-ssh-jar-deploy.yml@main
+    with:
+      service_name: ids-platform-backend
+      deploy_path: /opt/ids-platform-backend
+      artifact_name: backend-jar
+    secrets:
+      ssh_host: ${{ secrets.QA_SSH_HOST }}
+      ssh_user: ${{ secrets.QA_SSH_USER }}
+      ssh_private_key: ${{ secrets.QA_SSH_PRIVATE_KEY }}
+```
+
+## Repo-uri Care Pot Consuma Aceste Setari
+
+```text
+ids-platform-backend
+ids-api-contract
+viitor frontend
+viitor edge-agent
+viitoare servicii AI / workers
+```
+
+## Regula Simpla
+
+Repo-ul aplicatiei contine codul si decide cand ruleaza pipeline-ul.
+
+Acest repo contine setari comune, workflow-uri reutilizabile si templates pe care repo-ul aplicatiei le importa.

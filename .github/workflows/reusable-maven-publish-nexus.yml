@@ -1,0 +1,43 @@
+name: Reusable Maven Publish Nexus
+
+on:
+  workflow_call:
+    inputs:
+      java_version:
+        required: false
+        type: string
+        default: "21"
+      maven_deploy_command:
+        required: false
+        type: string
+        default: "mvn -B -DskipTests deploy"
+    secrets:
+      nexus_username:
+        required: true
+      nexus_password:
+        required: true
+
+jobs:
+  publish:
+    name: Publish Maven Artifact
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ inputs.java_version }}
+          cache: maven
+
+      - name: Configure Maven Nexus credentials
+        uses: SentinelStack/ids-infra-devops/.github/actions/setup-maven-nexus@main
+        with:
+          nexus_username: ${{ secrets.nexus_username }}
+          nexus_password: ${{ secrets.nexus_password }}
+
+      - name: Deploy to Nexus
+        run: ${{ inputs.maven_deploy_command }}

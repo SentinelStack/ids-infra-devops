@@ -1,0 +1,24 @@
+[Unit]
+Description=IDS Platform Backend
+After=network.target
+
+[Service]
+Type=simple
+User=ids-platform-backend
+Group=ids-platform-backend
+WorkingDirectory=/opt/ids-platform-backend
+EnvironmentFile=/opt/ids-platform-backend/ids-platform-backend.env
+ExecStart=/usr/bin/java -jar /opt/ids-platform-backend/app.jar
+Restart=on-failure
+RestartSec=10
+SuccessExitStatus=143
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/ids-platform-backend
+
+[Install]
+WantedBy=multi-user.target
+

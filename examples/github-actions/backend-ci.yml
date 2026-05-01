@@ -1,0 +1,38 @@
+name: Backend CI
+
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  quality:
+    uses: SentinelStack/ids-infra-devops/.github/workflows/reusable-maven-quality.yml@main
+    with:
+      java_version: "21"
+
+  publish:
+    if: github.event_name == 'push'
+    needs: quality
+    uses: SentinelStack/ids-infra-devops/.github/workflows/reusable-maven-publish-nexus.yml@main
+    with:
+      java_version: "21"
+    secrets:
+      nexus_username: ${{ secrets.NEXUS_USERNAME }}
+      nexus_password: ${{ secrets.NEXUS_PASSWORD }}
+
+  deploy-qa:
+    if: github.event_name == 'workflow_dispatch'
+    needs: quality
+    uses: SentinelStack/ids-infra-devops/.github/workflows/reusable-ssh-jar-deploy.yml@main
+    with:
+      artifact_name: backend-jar
+      deploy_path: /opt/ids-platform-backend
+      service_name: ids-platform-backend
+      jar_name: app.jar
+    secrets:
+      ssh_host: ${{ secrets.QA_SSH_HOST }}
+      ssh_user: ${{ secrets.QA_SSH_USER }}
+      ssh_private_key: ${{ secrets.QA_SSH_PRIVATE_KEY }}

@@ -1,0 +1,69 @@
+name: Reusable SSH JAR Deploy
+
+on:
+  workflow_call:
+    inputs:
+      artifact_name:
+        required: false
+        type: string
+        default: "backend-jar"
+      deploy_path:
+        required: true
+        type: string
+      service_name:
+        required: true
+        type: string
+      ssh_port:
+        required: false
+        type: string
+        default: "22"
+      jar_name:
+        required: false
+        type: string
+        default: "app.jar"
+    secrets:
+      ssh_host:
+        required: true
+      ssh_user:
+        required: true
+      ssh_private_key:
+        required: true
+
+jobs:
+  deploy:
+    name: SSH JAR Deploy
+    runs-on: ubuntu-latest
+    environment:
+      name: qa
+
+    steps:
+      - name: Download built JAR
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: target
+
+      - name: Deploy JAR over SSH
+        env:
+          SSH_HOST: ${{ secrets.ssh_host }}
+          SSH_USER: ${{ secrets.ssh_user }}
+          SSH_PRIVATE_KEY: ${{ secrets.ssh_private_key }}
+          SSH_PORT: ${{ inputs.ssh_port }}
+          DEPLOY_PATH: ${{ inputs.deploy_path }}
+          SERVICE_NAME: ${{ inputs.service_name }}
+          JAR_NAME: ${{ inputs.jar_name }}
+        run: |
+          set -euo pipefail
+
+          JAR_FILE=$(find target -maxdepth 1 -name "*.jar" | head -n 1)
+          test -n "$JAR_FILE" || (echo "No jar found in target/" && exit 1)
+
+          mkdir -p ~/.ssh
+          echo "${SSH_PRIVATE_KEY}" > ~/.ssh/deploy_key
+          chmod 600 ~/.ssh/deploy_key
+          ssh-keyscan -p "$SSH_PORT" -H "$SSH_HOST" >> ~/.ssh/known_hosts
+
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "${SSH_USER}@${SSH_HOST}" "mkdir -p ${DEPLOY_PATH}"
+          scp -i ~/.ssh/deploy_key -P "$SSH_PORT" "$JAR_FILE" "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/${JAR_NAME}"
+          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "${SSH_USER}@${SSH_HOST}" \
+            "sudo systemctl restart ${SERVICE_NAME} && sudo systemctl status ${SERVICE_NAME} --no-pager"

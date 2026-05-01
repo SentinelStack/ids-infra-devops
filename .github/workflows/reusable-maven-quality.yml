@@ -1,0 +1,78 @@
+name: Reusable Maven Quality
+
+on:
+  workflow_call:
+    inputs:
+      java_version:
+        description: JDK version used for build and quality gates.
+        required: false
+        type: string
+        default: "21"
+      maven_test_command:
+        description: Maven command for tests.
+        required: false
+        type: string
+        default: "mvn -B clean test"
+      maven_package_command:
+        description: Maven command used to package the application.
+        required: false
+        type: string
+        default: "mvn -B -DskipTests package"
+      artifact_name:
+        description: Name of the uploaded build artifact.
+        required: false
+        type: string
+        default: "backend-jar"
+      run_checkstyle:
+        required: false
+        type: boolean
+        default: true
+      run_pmd:
+        required: false
+        type: boolean
+        default: true
+      run_spotbugs:
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  quality:
+    name: Maven Quality
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ inputs.java_version }}
+          cache: maven
+
+      - name: Run tests
+        run: ${{ inputs.maven_test_command }}
+
+      - name: Run Checkstyle
+        if: inputs.run_checkstyle
+        run: mvn -B -DskipTests checkstyle:check
+
+      - name: Run PMD
+        if: inputs.run_pmd
+        run: mvn -B -DskipTests pmd:check
+
+      - name: Run SpotBugs
+        if: inputs.run_spotbugs
+        run: mvn -B -DskipTests spotbugs:check
+
+      - name: Package application
+        run: ${{ inputs.maven_package_command }}
+
+      - name: Upload built JAR
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ inputs.artifact_name }}
+          path: target/*.jar
+          if-no-files-found: error

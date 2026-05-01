@@ -1,0 +1,37 @@
+name: Setup Maven Nexus
+description: Configure Maven credentials for Sentinel Nexus repositories.
+
+inputs:
+  nexus_username:
+    description: Nexus username
+    required: true
+  nexus_password:
+    description: Nexus password
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Create Maven settings.xml
+      shell: bash
+      env:
+        NEXUS_USERNAME: ${{ inputs.nexus_username }}
+        NEXUS_PASSWORD: ${{ inputs.nexus_password }}
+      run: |
+        mkdir -p ~/.m2
+        cat > ~/.m2/settings.xml <<EOF
+        <settings>
+          <servers>
+            <server>
+              <id>nexus-releases</id>
+              <username>${NEXUS_USERNAME}</username>
+              <password>${NEXUS_PASSWORD}</password>
+            </server>
+            <server>
+              <id>nexus-snapshots</id>
+              <username>${NEXUS_USERNAME}</username>
+              <password>${NEXUS_PASSWORD}</password>
+            </server>
+          </servers>
+        </settings>
+        EOF
