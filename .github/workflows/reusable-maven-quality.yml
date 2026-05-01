@@ -35,11 +35,19 @@ on:
         required: false
         type: boolean
         default: true
+    secrets:
+      nexus_username:
+        required: false
+      nexus_password:
+        required: false
 
 jobs:
   quality:
     name: Maven Quality
     runs-on: ubuntu-latest
+    env:
+      NEXUS_USERNAME: ${{ secrets.nexus_username }}
+      NEXUS_PASSWORD: ${{ secrets.nexus_password }}
 
     steps:
       - name: Checkout repository
@@ -51,6 +59,13 @@ jobs:
           distribution: temurin
           java-version: ${{ inputs.java_version }}
           cache: maven
+
+      - name: Configure Maven Nexus credentials
+        if: env.NEXUS_USERNAME != '' && env.NEXUS_PASSWORD != ''
+        uses: SentinelStack/ids-infra-devops/.github/actions/setup-maven-nexus@main
+        with:
+          nexus_username: ${{ env.NEXUS_USERNAME }}
+          nexus_password: ${{ env.NEXUS_PASSWORD }}
 
       - name: Run tests
         run: ${{ inputs.maven_test_command }}
