@@ -12,6 +12,7 @@ Nu este gandit ca un repo de documentatie operationala lunga. Rolul lui este sa 
 config/maven/             # Maven/Nexus settings templates
 config/quality/           # Checkstyle, PMD, SpotBugs config
 config/services/          # Templates pentru service-uri concrete
+config/openwrt-agent/     # Template-uri shared pentru edge agent OpenWrt
 examples/github-actions/  # Exemple scurte de import
 ```
 
