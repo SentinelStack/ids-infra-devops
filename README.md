@@ -8,11 +8,13 @@ Nu este gandit ca un repo de documentatie operationala lunga. Rolul lui este sa 
 
 ```text
 .github/workflows/        # GitHub Actions reutilizabile
-.github/actions/          # Composite actions reutilizabile
+.github/actions/          # Composite actions reutilizabile (inclusiv Vault)
 config/maven/             # Maven/Nexus settings templates
 config/quality/           # Checkstyle, PMD, SpotBugs config
-config/services/          # Templates pentru service-uri concrete
+config/services/          # Config per-serviciu (application.yml, env, systemd, nginx, vault.manifest)
+config/vault/             # Politici, layout path-uri si seed-uri Vault (fara secrete reale)
 config/openwrt-agent/     # Template-uri shared pentru edge agent OpenWrt
+scripts/                  # render-env-from-vault.sh si utilitare
 examples/github-actions/  # Exemple scurte de import
 ```
 
@@ -66,6 +68,37 @@ viitor frontend
 viitor edge-agent
 viitoare servicii AI / workers
 ```
+
+## Configuratii Servicii + Vault
+
+Configuratiile per-serviciu stau centralizat aici. Secretele NU stau aici — vin
+din HashiCorp Vault si sunt randate la deploy intr-un EnvironmentFile.
+
+Structura per serviciu:
+
+```text
+config/services/<service>/
+  application.yml          # config non-secret (placeholders ${ENV})
+  vault.manifest.yml       # ce chei sunt secrete + path-ul lor in Vault
+  env/<service>.env.example  # default-uri non-secret
+  systemd/  nginx/         # unit + reverse proxy
+config/vault/
+  policies/<service>.hcl   # politica read per serviciu
+  paths.md                 # layout secrete: secret/sentinel/<service>/<env>
+  seed/<service>.*.example.json  # forma secretului (fara valori reale)
+scripts/render-env-from-vault.sh # vault kv get -> EnvironmentFile (0600)
+.github/actions/load-secrets-from-vault/  # composite action pentru CI/deploy
+```
+
+Flow deploy (deploy-time env render):
+
+1. `application.yml` (non-secret) este copiat pe host si stratificat peste jar
+   prin `--spring.config.additional-location`.
+2. `render-env-from-vault.sh <service> <env> <out>` citeste `vault.manifest.yml`,
+   trage secretele din `secret/sentinel/<service>/<env>` si scrie EnvironmentFile-ul.
+3. systemd incarca EnvironmentFile-ul (`MONGODB_URI` etc.) si porneste serviciul.
+
+Aplicatia ramane neschimbata: citeste totul din variabile de mediu / config extern.
 
 ## Regula Simpla
 

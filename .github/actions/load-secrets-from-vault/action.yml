@@ -1,0 +1,47 @@
+name: Load Secrets From Vault
+description: Render a service EnvironmentFile from Vault secrets + non-secret defaults.
+
+inputs:
+  service:
+    description: Service name (matches config/services/<service>)
+    required: true
+  environment:
+    description: Target environment (e.g. qa, prod)
+    required: true
+  output_file:
+    description: Path to write the rendered EnvironmentFile
+    required: true
+  vault_addr:
+    description: Vault server address (VAULT_ADDR)
+    required: true
+  vault_token:
+    description: Vault token with read access to the service policy
+    required: true
+
+runs:
+  using: composite
+  steps:
+    - name: Install vault + yq
+      shell: bash
+      run: |
+        set -euo pipefail
+        if ! command -v yq >/dev/null 2>&1; then
+          sudo curl -fsSL -o /usr/local/bin/yq \
+            https://github.com/mikefarah/yq/releases/latest/download/yq_linux_amd64
+          sudo chmod +x /usr/local/bin/yq
+        fi
+        if ! command -v vault >/dev/null 2>&1; then
+          curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
+          echo "deb [signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(lsb_release -cs) main" \
+            | sudo tee /etc/apt/sources.list.d/hashicorp.list >/dev/null
+          sudo apt-get update -qq && sudo apt-get install -y vault
+        fi
+
+    - name: Render EnvironmentFile from Vault
+      shell: bash
+      env:
+        VAULT_ADDR: ${{ inputs.vault_addr }}
+        VAULT_TOKEN: ${{ inputs.vault_token }}
+      run: |
+        "${{ github.action_path }}/../../../scripts/render-env-from-vault.sh" \
+          "${{ inputs.service }}" "${{ inputs.environment }}" "${{ inputs.output_file }}"

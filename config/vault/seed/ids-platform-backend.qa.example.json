@@ -1,0 +1,4 @@
+{
+  "_comment": "Example secret shape for secret/sentinel/ids-platform-backend/qa. Copy to a local (gitignored) file, fill real values, then: vault kv put secret/sentinel/ids-platform-backend/qa @ids-platform-backend.qa.json",
+  "MONGODB_URI": "mongodb://ids_user:CHANGE_ME@127.0.0.1:27017/ids_platform?authSource=ids_platform"
+}

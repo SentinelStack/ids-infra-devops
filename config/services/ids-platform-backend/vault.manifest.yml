@@ -1,0 +1,19 @@
+# Declares which environment variables for ids-platform-backend are secrets
+# sourced from Vault. Non-secret variables live in env/ids-platform-backend.env.example.
+#
+# Per-environment secret path (KV v2): <mount>/<basePath>/<environment>
+#   e.g. secret/sentinel/ids-platform-backend/qa
+#
+# Consumed by scripts/render-env-from-vault.sh at deploy time.
+
+service: ids-platform-backend
+
+vault:
+  mount: secret # KV v2 mount name
+  basePath: sentinel/ids-platform-backend
+
+secrets:
+  # env  = environment variable name written to the EnvironmentFile
+  # field = field name inside the Vault secret at <mount>/<basePath>/<env>
+  - env: MONGODB_URI
+    field: MONGODB_URI

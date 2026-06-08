@@ -7,8 +7,11 @@ Type=simple
 User=ids-platform-backend
 Group=ids-platform-backend
 WorkingDirectory=/opt/ids-platform-backend
+# Rendered from Vault at deploy by scripts/render-env-from-vault.sh (provides MONGODB_URI).
 EnvironmentFile=/opt/ids-platform-backend/ids-platform-backend.env
-ExecStart=/usr/bin/java -jar /opt/ids-platform-backend/app.jar
+# Centralized non-secret config shipped from ids-infra-devops, layered over the jar defaults.
+ExecStart=/usr/bin/java -jar /opt/ids-platform-backend/app.jar \
+  --spring.config.additional-location=optional:file:/opt/ids-platform-backend/application.yml
 Restart=on-failure
 RestartSec=10
 SuccessExitStatus=143
