@@ -21,6 +21,20 @@ on:
         required: false
         type: string
         default: "app.jar"
+      environment:
+        required: false
+        type: string
+        default: "qa"
+      vault_render:
+        description: "Render config from Vault on the host before restart (GitOps apply)"
+        required: false
+        type: boolean
+        default: false
+      infra_path:
+        description: "Path of the ids-infra-devops clone on the host"
+        required: false
+        type: string
+        default: "/opt/ids-infra-devops"
     secrets:
       ssh_host:
         required: true
@@ -50,6 +64,9 @@ jobs:
           DEPLOY_PATH: ${{ inputs.deploy_path }}
           SERVICE_NAME: ${{ inputs.service_name }}
           JAR_NAME: ${{ inputs.jar_name }}
+          ENVIRONMENT: ${{ inputs.environment }}
+          VAULT_RENDER: ${{ inputs.vault_render }}
+          INFRA_PATH: ${{ inputs.infra_path }}
         run: |
           set -euo pipefail
 
@@ -63,5 +80,12 @@ jobs:
 
           ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "${SSH_USER}@${SSH_HOST}" "mkdir -p ${DEPLOY_PATH}"
           scp -i ~/.ssh/deploy_key -P "$SSH_PORT" "$JAR_FILE" "${SSH_USER}@${SSH_HOST}:${DEPLOY_PATH}/${JAR_NAME}"
-          ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "${SSH_USER}@${SSH_HOST}" \
-            "sudo systemctl restart ${SERVICE_NAME} && sudo systemctl status ${SERVICE_NAME} --no-pager"
+
+          if [ "${VAULT_RENDER}" = "true" ]; then
+            # GitOps apply on the host: pull infra config, render env from Vault, ship config, restart.
+            ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "${SSH_USER}@${SSH_HOST}" \
+              "${INFRA_PATH}/scripts/vps-apply.sh ${SERVICE_NAME} ${ENVIRONMENT}"
+          else
+            ssh -i ~/.ssh/deploy_key -p "$SSH_PORT" "${SSH_USER}@${SSH_HOST}" \
+              "sudo systemctl restart ${SERVICE_NAME} && sudo systemctl status ${SERVICE_NAME} --no-pager"
+          fi
