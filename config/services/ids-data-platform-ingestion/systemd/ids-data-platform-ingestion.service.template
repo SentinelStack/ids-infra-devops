@@ -1,0 +1,16 @@
+[Unit]
+Description=IDS Data Platform - Ingestion (backend -> Kafka)
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/ids-data-platform-ingestion
+EnvironmentFile=/opt/ids-data-platform-ingestion/ids-data-platform-ingestion.env
+ExecStart=/usr/bin/java -Xmx384m -jar /opt/ids-data-platform-ingestion/app.jar
+Restart=on-failure
+RestartSec=10
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
