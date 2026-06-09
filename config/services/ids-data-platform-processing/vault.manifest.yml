@@ -1,0 +1,15 @@
+# Secrets for the data-platform processing (Spark) service: AWS S3 credentials.
+# Per-environment path (KV v2): secret/sentinel/ids-data-platform-processing/<env>
+# Consumed by scripts/render-env-from-vault.sh at deploy time.
+
+service: ids-data-platform-processing
+
+vault:
+  mount: secret
+  basePath: sentinel/ids-data-platform-processing
+
+secrets:
+  - env: AWS_ACCESS_KEY_ID
+    field: AWS_ACCESS_KEY_ID
+  - env: AWS_SECRET_ACCESS_KEY
+    field: AWS_SECRET_ACCESS_KEY

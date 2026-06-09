@@ -1,0 +1,16 @@
+[Unit]
+Description=IDS Data Platform - Processing (Spark: Kafka -> S3 Parquet)
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/ids-data-platform-processing
+EnvironmentFile=/opt/ids-data-platform-processing/ids-data-platform-processing.env
+ExecStart=/usr/bin/java -Xmx2g -jar /opt/ids-data-platform-processing/app.jar
+Restart=on-failure
+RestartSec=15
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
