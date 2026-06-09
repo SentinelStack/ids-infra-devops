@@ -1,0 +1,11 @@
+[Unit]
+Description=Run IDS Data Platform batch analytics daily
+
+[Timer]
+# Daily at 02:30 UTC, plus a catch-up run if the box was off at trigger time.
+OnCalendar=*-*-* 02:30:00
+Persistent=true
+RandomizedDelaySec=300
+
+[Install]
+WantedBy=timers.target

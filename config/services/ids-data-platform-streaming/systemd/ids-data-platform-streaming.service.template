@@ -1,0 +1,29 @@
+[Unit]
+Description=IDS Data Platform - Streaming (Flink: Kafka ids.alerts -> traffic-anomalies)
+After=network.target
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/ids-data-platform-streaming
+EnvironmentFile=/opt/ids-data-platform-streaming/ids-data-platform-streaming.env
+# Flink 1.20 runs in-process (local MiniCluster) here. On Java 21 it needs the
+# module add-opens/add-exports below, otherwise it fails with InaccessibleObjectException.
+ExecStart=/usr/bin/java -Xmx512m \
+  --add-opens=java.base/java.lang=ALL-UNNAMED \
+  --add-opens=java.base/java.net=ALL-UNNAMED \
+  --add-opens=java.base/java.io=ALL-UNNAMED \
+  --add-opens=java.base/java.nio=ALL-UNNAMED \
+  --add-opens=java.base/java.util=ALL-UNNAMED \
+  --add-opens=java.base/java.util.concurrent=ALL-UNNAMED \
+  --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED \
+  --add-opens=java.base/java.lang.reflect=ALL-UNNAMED \
+  --add-opens=java.base/sun.nio.ch=ALL-UNNAMED \
+  --add-exports=java.base/sun.net.util=ALL-UNNAMED \
+  -jar /opt/ids-data-platform-streaming/app.jar
+Restart=on-failure
+RestartSec=15
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target

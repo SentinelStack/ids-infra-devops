@@ -1,0 +1,16 @@
+[Unit]
+Description=IDS Data Platform - Batch Analytics (Spark: S3 alert lake -> curated reports)
+After=network.target
+
+[Service]
+Type=oneshot
+User=root
+WorkingDirectory=/opt/ids-data-platform-processing
+EnvironmentFile=/opt/ids-data-platform-processing/ids-data-platform-processing.env
+# Reuses the processing fat jar; selects the batch main class explicitly.
+ExecStart=/usr/bin/java -Xmx2g -cp /opt/ids-data-platform-processing/app.jar \
+  ro.puk3p.sentinel.dataplatform.processing.BatchAnalyticsJobKt
+SuccessExitStatus=143
+
+[Install]
+WantedBy=multi-user.target
