@@ -28,7 +28,7 @@ services:
       - kafka-data:/var/lib/kafka/data
 
   kafka-ui:
-    image: provectuslabs/kafka-ui:latest
+    image: ghcr.io/kafbat/kafka-ui:latest
     container_name: sentinel-kafka-ui
     restart: unless-stopped
     depends_on:

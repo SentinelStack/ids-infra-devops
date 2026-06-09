@@ -1,0 +1,36 @@
+server {
+    listen 80;
+    server_name kafka.puk3p.online;
+
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name kafka.puk3p.online;
+
+    ssl_certificate /etc/letsencrypt/live/kafka.puk3p.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/kafka.puk3p.online/privkey.pem;
+
+    access_log /var/log/nginx/kafka-ui.qa.access.log;
+    error_log /var/log/nginx/kafka-ui.qa.error.log;
+
+    # Kafbat UI has no auth of its own; gate it at the edge.
+    auth_basic "Sentinel Kafka UI";
+    auth_basic_user_file /etc/nginx/.kafka-ui.htpasswd;
+
+    location / {
+        proxy_pass http://127.0.0.1:8089;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        # websocket upgrade for live topic/message streaming
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_read_timeout 3600s;
+    }
+}
