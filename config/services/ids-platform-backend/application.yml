@@ -30,4 +30,4 @@ management:
 
 app:
   cors:
-    allowed-origins: ${CORS_ALLOWED_ORIGINS:https://qa-dashboard.puk3p.online}
+    allowed-origins: ${CORS_ALLOWED_ORIGINS:https://sentinel.puk3p.online}
