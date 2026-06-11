@@ -1,0 +1,38 @@
+server {
+    listen 80;
+    server_name qa-dashboard.puk3p.online;
+
+    return 301 https://$host$request_uri;
+}
+
+server {
+    listen 443 ssl http2;
+    server_name qa-dashboard.puk3p.online;
+
+    ssl_certificate /etc/letsencrypt/live/qa-dashboard.puk3p.online/fullchain.pem;
+    ssl_certificate_key /etc/letsencrypt/live/qa-dashboard.puk3p.online/privkey.pem;
+
+    root /var/www/qa-dashboard.puk3p.online;
+    index index.html;
+
+    access_log /var/log/nginx/qa-dashboard.access.log;
+    error_log /var/log/nginx/qa-dashboard.error.log;
+
+    # index.html must not be cached so new deploys are picked up immediately.
+    location = /index.html {
+        add_header Cache-Control "no-cache, no-store, must-revalidate";
+        try_files $uri =404;
+    }
+
+    # Content-hashed assets (Angular outputHashing=all) are immutable.
+    location ~* \.(?:js|css|woff2?|ttf|eot|png|jpe?g|gif|svg|ico|webp)$ {
+        try_files $uri =404;
+        expires 1y;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # SPA: every unknown path falls back to the Angular entry point.
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+}
