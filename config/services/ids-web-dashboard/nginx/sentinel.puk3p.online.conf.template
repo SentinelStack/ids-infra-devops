@@ -31,6 +31,19 @@ server {
         add_header Cache-Control "public, immutable";
     }
 
+    # Server-side IP geolocation proxy. ipwho.is rejects browser requests that
+    # carry an Origin/Referer (free-tier anti-abuse), so the SPA calls this
+    # same-origin path and nginx forwards to ipwho.is without those headers.
+    location /geo/ {
+        proxy_pass https://ipwho.is/;
+        proxy_ssl_server_name on;
+        proxy_set_header Host ipwho.is;
+        proxy_set_header Origin "";
+        proxy_set_header Referer "";
+        proxy_set_header User-Agent "sentinel-ids-geo";
+        add_header Cache-Control "public, max-age=86400";
+    }
+
     # SPA: every unknown path falls back to the Angular entry point.
     location / {
         try_files $uri $uri/ /index.html;
