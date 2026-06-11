@@ -40,6 +40,10 @@ server {
         proxy_set_header Host ipwho.is;
         proxy_set_header Origin "";
         proxy_set_header Referer "";
+        proxy_set_header Sec-Fetch-Mode "";
+        proxy_set_header Sec-Fetch-Site "";
+        proxy_set_header Sec-Fetch-Dest "";
+        proxy_set_header Sec-Fetch-User "";
         proxy_set_header User-Agent "sentinel-ids-geo";
         add_header Cache-Control "public, max-age=86400";
     }
