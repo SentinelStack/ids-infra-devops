@@ -1,0 +1,15 @@
+[Unit]
+Description=IDS Traffic Simulator (demo alert generator)
+After=network.target ids-platform-backend.service
+
+[Service]
+Type=simple
+User=root
+WorkingDirectory=/opt/ids-traffic-simulator
+EnvironmentFile=/opt/ids-traffic-simulator/ids-traffic-simulator.env
+ExecStart=/opt/ids-traffic-simulator/generate-traffic.sh
+Restart=on-failure
+RestartSec=10
+
+[Install]
+WantedBy=multi-user.target
