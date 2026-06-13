@@ -1,0 +1,37 @@
+<!-- Sentinel ClickHouse users. Copy to /etc/clickhouse-server/users.d/zz-sentinel.xml
+     and replace the SHA256 placeholders with real hashes BEFORE installing.
+
+     Generate a hash from the password stored in Vault:
+         printf '%s' "$PASSWORD" | sha256sum | cut -d' ' -f1
+
+     Do NOT commit real hashes to this repo — keep the source passwords in Vault
+     (secret/sentinel/ids-download-report/qa : CLICKHOUSE_PASSWORD for report_app,
+      and an admin password for the default user).
+
+     Users:
+       - default  : admin (DDL/INSERT); used to apply schema.sql and manage the box.
+       - sentinel : read-only (readonly=2); for the public Play UI (clickhouse.puk3p.online).
+     The app's SELECT-only `report_app` user is created via SQL (see schema.sql),
+     not here, because it uses RBAC grants. -->
+<clickhouse>
+    <profiles>
+        <ro>
+            <readonly>2</readonly>
+        </ro>
+    </profiles>
+    <users>
+        <default replace="true">
+            <password_sha256_hex>__DEFAULT_PASSWORD_SHA256__</password_sha256_hex>
+            <networks><ip>::/0</ip></networks>
+            <profile>default</profile>
+            <quota>default</quota>
+            <access_management>1</access_management>
+        </default>
+        <sentinel replace="true">
+            <password_sha256_hex>__SENTINEL_PASSWORD_SHA256__</password_sha256_hex>
+            <networks><ip>::/0</ip></networks>
+            <profile>ro</profile>
+            <quota>default</quota>
+        </sentinel>
+    </users>
+</clickhouse>

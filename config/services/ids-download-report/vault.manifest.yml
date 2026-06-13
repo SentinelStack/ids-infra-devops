@@ -1,0 +1,19 @@
+# Declares which environment variables for ids-download-report are secrets
+# sourced from Vault. Non-secret variables live in env/ids-download-report.env.example.
+#
+# Per-environment secret path (KV v2): <mount>/<basePath>/<environment>
+#   e.g. secret/sentinel/ids-download-report/qa
+#
+# Consumed by scripts/render-env-from-vault.sh at deploy time.
+
+service: ids-download-report
+
+vault:
+  mount: secret # KV v2 mount name
+  basePath: sentinel/ids-download-report
+
+secrets:
+  # env  = environment variable name written to the EnvironmentFile
+  # field = field name inside the Vault secret at <mount>/<basePath>/<env>
+  - env: CLICKHOUSE_PASSWORD
+    field: CLICKHOUSE_PASSWORD

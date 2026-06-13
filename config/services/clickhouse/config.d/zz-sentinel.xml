@@ -1,0 +1,11 @@
+<!-- Sentinel ClickHouse server overrides. Drop into /etc/clickhouse-server/config.d/.
+     Caps memory on the shared VPS and makes the Kafka engine backfill from the
+     start of the topic. No secrets here. -->
+<clickhouse>
+    <max_server_memory_usage>2000000000</max_server_memory_usage>
+    <mark_cache_size>268435456</mark_cache_size>
+    <uncompressed_cache_size>0</uncompressed_cache_size>
+    <kafka>
+        <auto_offset_reset>earliest</auto_offset_reset>
+    </kafka>
+</clickhouse>

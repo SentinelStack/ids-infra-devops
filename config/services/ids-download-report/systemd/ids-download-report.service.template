@@ -1,0 +1,25 @@
+[Unit]
+Description=IDS Download Report (ClickHouse-backed filtered exports)
+After=network.target clickhouse-server.service
+Wants=clickhouse-server.service
+
+[Service]
+Type=simple
+User=ids-download-report
+Group=ids-download-report
+WorkingDirectory=/opt/ids-download-report
+# Rendered from Vault at deploy by scripts/render-env-from-vault.sh (provides CLICKHOUSE_PASSWORD).
+EnvironmentFile=/opt/ids-download-report/ids-download-report.env
+ExecStart=/usr/bin/java -jar /opt/ids-download-report/app.jar
+Restart=on-failure
+RestartSec=10
+SuccessExitStatus=143
+
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=true
+ReadWritePaths=/opt/ids-download-report
+
+[Install]
+WantedBy=multi-user.target
