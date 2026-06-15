@@ -16,6 +16,9 @@
 set -euo pipefail
 
 BACKEND_URL="${BACKEND_URL:-http://localhost:8082}"
+# Edge API key — the backend locks down ingest endpoints, so the simulator
+# presents the same X-API-Key the real agent uses (ROLE_AGENT). Override via env.
+AGENT_API_KEY="${AGENT_API_KEY:-edge-agent-7f3c1a9e5b2d4f80}"
 DEVICE_ID="${DEVICE_ID:-edge-router-01}"
 DEVICE_NAME="${DEVICE_NAME:-Edge Router 01}"
 DEVICE_IP="${DEVICE_IP:-192.168.1.1}"
@@ -41,7 +44,9 @@ log() { echo "[traffic-sim] $*"; }
 
 post() { # method path json
   curl -s -o /dev/null -w '%{http_code}' -X "$1" "${BACKEND_URL}$2" \
-    -H 'Content-Type: application/json' -d "$3" 2>/dev/null || echo 000
+    -H 'Content-Type: application/json' \
+    -H "X-API-Key: ${AGENT_API_KEY}" \
+    -d "$3" 2>/dev/null || echo 000
 }
 
 register_device() {
